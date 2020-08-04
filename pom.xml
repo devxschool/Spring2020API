@@ -11,6 +11,7 @@
     <modules>
         <module>FoodDelivery</module>
         <module>Practice</module>
+        <module>PracticeDB</module>
     </modules>
 
     <properties>
