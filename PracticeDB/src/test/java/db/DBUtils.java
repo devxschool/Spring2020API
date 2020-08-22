@@ -16,15 +16,17 @@ public class DBUtils {
     private static Statement statement;
     private static QueryRunner queryRunner;
 
-    private DBUtils(){};
+    private DBUtils() {
+    }
+
 
     public static void open(String dataBase) throws SQLException {
         MysqlDataSource dataSource = getBaseDataSource(dataBase);
-        if(connection == null){
+        if (connection == null) {
             connection = dataSource.getConnection();
             statement = connection.createStatement();
             queryRunner = new QueryRunner(dataSource);
-        }else{
+        } else {
             throw new SQLException("Connection is already open");
         }
     }
@@ -35,13 +37,26 @@ public class DBUtils {
 
     // String q = SELECT * FORM employee WHERE id = ? AND first_name = ?;
     // query(q, 101, "James")
-    public static ResultSet query(String query, Object... params) throws SQLException {
-        if(params.length == 0) return statement.executeQuery(query);
 
+    /**         String query                                  Object... params Object[101]
+     * query("SELECT * FROM employees WHERE employeeNumber = ?;", 101)
+     * WHERE firstName = 'John'
+     * WHERE employeeNumer = 101
+     * query.replace(?, param)
+     *
+     * query("SELECT * FROM employees WHERE employeeNumber = ? AND firstName = ? AND lastName = ?", 101, "James", "Bond");
+     * Object{101, "James", "Bond"};
+     *"SELECT * FROM employees WHERE employeeNumber = 101 AND firstName = 'James' AND lastName = 'Bond'"
+     */
+    public static ResultSet query(String query, Object... params) throws SQLException {
+        if (params.length == 0) return statement.executeQuery(query);
+
+        // Prepared statement is used to execute a number of same queries with different params
         PreparedStatement preparedStatement = connection.prepareStatement(query);
-        for (int i = 0; i < params.length; i++){
-            preparedStatement.setObject(i + 1, params[0]);
+        for (int i = 0; i < params.length; i++) {
+            preparedStatement.setObject(i + 1, params[i]);
         }
+
         return preparedStatement.executeQuery();
     }
 
@@ -49,16 +64,18 @@ public class DBUtils {
         return DBHandler.rsToList(query(query));
     }
 
-    public static void close(){
+
+    public static void close() {
         try {
             if (statement != null) statement.close();
             if (connection != null) connection.close();
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    private static MysqlDataSource getBaseDataSource(String database){
+    ////jdbc:mysql://18.218.51.74:3306/classicmodels?user=student&password=P@ssw0rd");
+    private static MysqlDataSource getBaseDataSource(String database) {
         MysqlDataSource dataSource = new MysqlDataSource();
         dataSource.setServerName(Config.getProperty("server"));
         dataSource.setPortNumber(Integer.parseInt(Config.getProperty("port")));

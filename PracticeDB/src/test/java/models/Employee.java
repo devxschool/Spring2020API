@@ -7,22 +7,26 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
-// POJO, Beans
+//POJO, Beans
 //Lombok
 public class Employee{
-    int employeeNumber;
-    String lastName;
-    String firstName;
-    String extension;
-    String email;
-    String officeCode;
-    int reportsTo;
-    String jobTitle;
+    private int employeeNumber;
+    private String lastName;
+    private String firstName;
+    private String extension;
+    private String email;
+    private String officeCode;
+    private int reportsTo;
+    private String jobTitle;
 
+    private static final String[] properties = {"employeeNumber", "lastName", "firstName", "extension", "email", "officeCode", "reportsTo", "jobTitle"};
     public Employee(){};
 
+    //Constructor that will turn a row from a ResultSet into the object of this class
     public Employee(ResultSet rs) throws SQLException {
+        // BeanProcessor comes form Apache DB utils
         BeanProcessor processor = new BeanProcessor();
         processor.populateBean(rs, this); // populates bean from result set
     }
@@ -36,6 +40,51 @@ public class Employee{
         this.officeCode = officeCode;
         this.reportsTo = reportsTo;
         this.jobTitle = jobTitle;
+    }
+
+    public static List<Employee> getAll() throws SQLException {
+        String query = "SELECT * FROM employees";
+        ResultSet rs = DBUtils.query(query);
+        BeanProcessor processor = new BeanProcessor();
+        // toBeanList() converts a result set into a list of objects of a specified class by
+        // populating class variables with the data from Result set
+        return processor.toBeanList(rs, Employee.class);
+//        List<Employee> employees = new ArrayList<>();
+//
+//        while (rs.next()) {
+//            employees.add(new Employee(rs));
+//        }
+//        return employees;
+    }
+
+    // getBy("employeeId", 101)
+    // getBy("firstName", "James")
+    // Emloyee.getBy("firstName", "Joan")
+    public static Employee getBy(String field, Object value) throws SQLException {
+        // Select * FROM employees WHERE employeeId = 101;
+                                                    // firstName = "Joan"
+        String query = "SELECT * FROM employees WHERE " + field + " = ?";// add our value from field param into our query
+        // (SELECT * FROM employees WHERE firstName = ?)
+        ResultSet rs = DBUtils.query(query, value); // (SELECT * FROM employees WHERE firstName = 'Joan')
+        if(rs.next()) return new Employee(rs);
+        return null;
+    }
+
+    public static Employee getBy(List<String> fieldsToUseInWhere, Object... values) throws SQLException {
+        if(fieldsToUseInWhere.size() != values.length) throw new IllegalArgumentException("Number of arguments don't match");
+        String query = "SELECT * FROM employees WHERE ";
+
+        for (int i = 0; i < fieldsToUseInWhere.size(); i++){
+            if(i == 0){
+                query += fieldsToUseInWhere.get(i) + " =  ? \n";
+            }else{
+                query += "AND " + fieldsToUseInWhere.get(i) + " = ? \n";
+            }
+        }
+        BeanProcessor processor = new BeanProcessor();
+        ResultSet rs = DBUtils.query(query, values);// Get result from query build into result set
+        if(!rs.next()) return null;// if Result Set is empty return null
+        return processor.toBean(rs, Employee.class);// else Map a row from result set into new object of employee
     }
 
     public int getEmployeeNumber() {
@@ -102,25 +151,7 @@ public class Employee{
         this.jobTitle = jobTitle;
     }
 
-    public static List<Employee> getAll() throws SQLException {
-        String query = "SELECT * FROM employees";
-        ResultSet rs = DBUtils.query(query);
-        List<Employee> employees = new ArrayList<>();
 
-        while (rs.next()) {
-            employees.add(new Employee(rs));
-        }
-        return employees;
-    }
-
-        // getBy("employeeId", 101)
-    public static Employee getBy(String field, Object value) throws SQLException {
-        // Select * FROM employees WHERE employeeId = 101;
-        String query = "SELECT * FROM employees WHERE " + field + " = ?";
-        ResultSet rs = DBUtils.query(query, value);
-        if(rs.next()) return new Employee(rs);
-        return null;
-    }
 
     @Override
     public String toString() {
