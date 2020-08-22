@@ -17,8 +17,8 @@ public class DBHandler {
         List<String> headers = getHeaders(rs); // Store headers
         while (rs.next()) {
             Map<String, Object> row = new HashMap<>(); // declare a map that would represent a row
-            for (String s : headers) { // Iterating through headers
-                row.put(s, rs.getObject(s)); // populating the row with (key = header name; value = is a value from result set under that column)
+            for (String headerName : headers) { // Iterating through headers
+                row.put(headerName, rs.getObject(headerName)); // populating the row with (key = header name; value = is a value from result set under that column)
             }
             table.add(row);
         }
@@ -36,8 +36,16 @@ public class DBHandler {
         return headers;
     }
 
-    public static <T> List<T> getAll(String query, Class<T> tClass, Object... params) throws SQLException {
-        ResultSet rs =  DBUtils.query(query, params);
-        return new BeanProcessor().toBeanList(rs, tClass);
-    }
+    /**
+     * {
+     *     {employeeNumber:101; firstName:"Joane"; }
+     *     {employeeNumber:101; firstName:"Joane"; }
+     *     {employeeNumber:101; firstName:"Joane"; }
+     *     {employeeNumber:101; firstName:"Joane"; }
+     * }
+     *
+     *
+     *
+     */
+
 }

@@ -90,9 +90,11 @@ public class TestConnection {
             Employee employee = Employee.getBy("firstName", "Diane");
             Assert.assertTrue(employee != null);
         }catch (SQLException e){
-
+            e.printStackTrace();
         }finally {
             DBUtils.close();
         }
     }
+
+
 }
