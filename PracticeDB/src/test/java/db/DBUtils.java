@@ -4,10 +4,7 @@ import com.mysql.cj.jdbc.MysqlDataSource;
 import config.Config;
 import org.apache.commons.dbutils.QueryRunner;
 
-import javax.swing.plaf.nimbus.State;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,8 +13,7 @@ public class DBUtils {
     private static Statement statement;
     private static QueryRunner queryRunner;
 
-    private DBUtils() {
-    }
+    private DBUtils() { }
 
 
     public static void open(String dataBase) throws SQLException {
@@ -64,6 +60,17 @@ public class DBUtils {
         return DBHandler.rsToList(query(query));
     }
 
+    public static boolean insertBean(String query, Object bean, String[] properties) throws SQLException {
+        PreparedStatement preparedStatement = connection.prepareStatement(query); // instantiate new prep statement
+        queryRunner.fillStatementWithBean(preparedStatement, bean, properties);
+        // fill the statement(replace ? with values from our Bean(Object) from variable names provide as properties )
+        return preparedStatement.execute();
+    }
+
+    /**
+     * INSERT INTO employees
+     * VALUES(employeeNumber, firstName, lastName....);
+     */
 
     public static void close() {
         try {
