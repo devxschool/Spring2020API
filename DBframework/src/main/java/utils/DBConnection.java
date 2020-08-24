@@ -41,11 +41,21 @@ public class DBConnection {
         }
     }
 
-    public static <T> boolean insertBean(String query, T bean) throws SQLException {
+    public static <T> boolean insertBean(String query, T bean, String[] properties) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(query);
-        queryRunner.fillStatementWithBean(preparedStatement, bean, "id", "first_name", "last_name", "email", "age");
+        queryRunner.fillStatementWithBean(preparedStatement, bean, properties);
         return preparedStatement.execute();
     }
+
+//    public boolean insertToDB(){
+//        String q = "INSERT INTO employees VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+//        try{
+//            return DBUtils.insertBean(q, this, properties);
+//        }catch (SQLException e){
+//            e.printStackTrace();
+//        }
+//        return false;
+//    }
 
     public static <T> List<T> queryToBeans(String query, Class<T> tClass, Object... params) throws SQLException {
         return queryRunner.execute(query, new BeanHandler<T>(tClass), params);
