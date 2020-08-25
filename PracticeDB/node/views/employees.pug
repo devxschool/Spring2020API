@@ -1,0 +1,27 @@
+html
+  head
+    title= title
+  body
+  div(class="container")
+  <div class="well"><b>Emloyees Details</b></div>
+   table(class='table table-striped')
+    thead
+     tr
+      th Employee Number
+      th Last Name
+      th First Name
+      th extension
+      th email
+      th Office Code
+      th Reports To
+      th Job Title
+    each item in items
+     tr
+      td=item.employeeNumber
+      td=item.lastName
+      td=item.firstName
+      td=item.extension
+      td=item.email
+      td=item.officeCode
+      td=item.reportsTo
+      td=item.jobTitle
