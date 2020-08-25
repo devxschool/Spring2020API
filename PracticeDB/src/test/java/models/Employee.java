@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 //POJO, Beans
@@ -178,9 +179,22 @@ public class Employee extends BaseModel{
                 '}';
     }
 
-    /**
-     *
-     *
-     *
-     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Employee employee = (Employee) o;
+        return reportsTo == employee.reportsTo &&
+                Objects.equals(lastName, employee.lastName) &&
+                Objects.equals(firstName, employee.firstName) &&
+                Objects.equals(extension, employee.extension) &&
+                Objects.equals(email, employee.email) &&
+                Objects.equals(officeCode, employee.officeCode) &&
+                Objects.equals(jobTitle, employee.jobTitle);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(lastName, firstName, extension, email, officeCode, reportsTo, jobTitle);
+    }
 }
