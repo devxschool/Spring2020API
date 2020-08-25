@@ -25,11 +25,11 @@ public class EmployeeInfo extends BaseModel{
     String postalCode;
 
     private static final String getAllQuery = "" +
-            "SELECT lastName, firstName, email, officeCode, addressLine1," +
-            " addressLine2, city, state, country, postalCode\n" +
-            "FROM employees\n" +
-            "JOIN offices\n" +
-            "USING (officeCode)";
+                                                "SELECT lastName, firstName, email, officeCode, addressLine1," +
+                                                " addressLine2, city, state, country, postalCode\n" +
+                                                "FROM employees\n" +
+                                                "JOIN offices\n" +
+                                                "USING (officeCode)";
 
 
     public EmployeeInfo(ResultSet rs) throws SQLException {
@@ -69,6 +69,25 @@ public class EmployeeInfo extends BaseModel{
         return beans;
     }
 
+    public static void main(String[] args) throws IOException{
+        try{
+            DBUtils.open();
+            Set<EmployeeInfo> target = EmployeeInfo.parseAll("emp.txt");// Source 1 (Target)
+            List<EmployeeInfo> source = EmployeeInfo.getAll();// From DataBase directly using queries (Source)
+            Assert.assertEquals(target.size(), source.size());
+            for (EmployeeInfo employeeInfo : source) { // Iterate thru list of objs received from DB
+                if (!target.contains(employeeInfo)) //Verify that list from other source contains the object from database
+                    System.out.println(employeeInfo);
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }finally {
+            DBUtils.close();
+        }
+
+
+    }
+
 //    public static void main(String[] args) throws SQLException, IOException {
 //        DBUtils.open();
 //        List<EmployeeInfo> source = EmployeeInfo.getAll();
@@ -77,34 +96,51 @@ public class EmployeeInfo extends BaseModel{
 //        DBUtils.close();
 //    }
 
-    public static void main(String[] args) throws SQLException, IOException {
-        DBUtils.open();
-        List<EmployeeInfo> source = EmployeeInfo.getAll();
-        Set<EmployeeInfo> target = EmployeeInfo.parseAll("emp.txt");
+//    public static void main(String[] args) throws SQLException, IOException {
+//        DBUtils.open();
+//        List<EmployeeInfo> source = EmployeeInfo.getAll();
+//        Set<EmployeeInfo> target = EmployeeInfo.parseAll("emp.txt");
+//
+////        source.forEach(System.out::println);
+////        System.out.println("TARGET");
+////        target.forEach(System.out::println);
+////        for(EmployeeInfo record : source){
+////            if(!target.contains(record)) System.out.println(record);//Assert.fail("No record present");
+////        }
+//        System.out.println(source.size());
+//        System.out.println(target.size());
+//        DBUtils.close();
+//    }
 
-//        source.forEach(System.out::println);
-//        System.out.println("TARGET");
-//        target.forEach(System.out::println);
-//        for(EmployeeInfo record : source){
-//            if(!target.contains(record)) System.out.println(record);//Assert.fail("No record present");
-//        }
-        System.out.println(source.size());
-        System.out.println(target.size());
-        DBUtils.close();
-    }
+//    @Override
+//    public String toString() {
+//        return  lastName + "," +
+//                firstName + ',' +
+//                email + ',' +
+//                officeCode + ',' +
+//                addressLine1 + ',' +
+//                addressLine2 + ',' +
+//                city + ',' +
+//                state + ',' +
+//                country + ',' +
+//                postalCode;
+//    }
+
 
     @Override
     public String toString() {
-        return  lastName + "," +
-                firstName + ',' +
-                email + ',' +
-                officeCode + ',' +
-                addressLine1 + ',' +
-                addressLine2 + ',' +
-                city + ',' +
-                state + ',' +
-                country + ',' +
-                postalCode;
+        return "EmployeeInfo{" +
+                "lastName='" + lastName + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", email='" + email + '\'' +
+                ", officeCode='" + officeCode + '\'' +
+                ", addressLine1='" + addressLine1 + '\'' +
+                ", addressLine2='" + addressLine2 + '\'' +
+                ", city='" + city + '\'' +
+                ", state='" + state + '\'' +
+                ", country='" + country + '\'' +
+                ", postalCode='" + postalCode + '\'' +
+                '}';
     }
 
     @Override
