@@ -35,10 +35,10 @@ public class ProductInfoDef {
         Assert.assertEquals(infoFromDB, infoFromAPI);
     }
 
-    @Given("^DB connection is open$")
-    public void db_connection_is_open()  {
+    @Given("^DB connection is open to database \"([^\"]*)\"$")
+    public void db_connection_is_open_to_database(String database) {
         try{
-            DBUtils.open();
+            DBUtils.open(database);
         }catch (SQLException e){
             Assert.fail(e.getMessage());
         }
