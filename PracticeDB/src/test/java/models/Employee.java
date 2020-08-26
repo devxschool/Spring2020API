@@ -128,7 +128,8 @@ public class Employee extends BaseModel{
     }
 
     public void setExtension(String extension) {
-        this.extension = extension;
+        if(extension == null) this.extension = "";
+        else this.extension = extension;
     }
 
     public String getEmail() {
@@ -136,7 +137,7 @@ public class Employee extends BaseModel{
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        this.email = email == null ? "" : email;
     }
 
     public String getOfficeCode() {
@@ -144,7 +145,7 @@ public class Employee extends BaseModel{
     }
 
     public void setOfficeCode(String officeCode) {
-        this.officeCode = officeCode;
+        this.officeCode = officeCode == null ? "" : officeCode;
     }
 
     public int getReportsTo() {

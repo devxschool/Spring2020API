@@ -44,6 +44,11 @@ public class DBUtils {
      * Object{101, "James", "Bond"};
      *"SELECT * FROM employees WHERE employeeNumber = 101 AND firstName = 'James' AND lastName = 'Bond'"
      */
+
+    public static void truncate(String table) throws SQLException {
+        statement.execute("TRUNCATE TABLE " + table + ";");
+    }
+
     public static ResultSet query(String query, Object... params) throws SQLException {
         if (params.length == 0) return statement.executeQuery(query);
 

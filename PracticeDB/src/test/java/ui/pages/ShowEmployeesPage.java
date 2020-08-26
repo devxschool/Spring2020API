@@ -20,6 +20,11 @@ public class ShowEmployeesPage {
         PageFactory.initElements(Driver.getDriver(), this);
     }
 
+    public static ShowEmployeesPage goTo(){
+        Driver.getDriver().get("http://localhost:300/employees");
+        return new ShowEmployeesPage();
+    }
+
     public List<Employee> parseEmployees(){
         List<Employee> employees = new ArrayList<>();
         tableRows.remove(0);
