@@ -21,7 +21,7 @@ public class ShowEmployeesPage {
     }
 
     public static ShowEmployeesPage goTo(){
-        Driver.getDriver().get("http://localhost:300/employees");
+        Driver.getDriver().get("http://ec2-3-129-218-184.us-east-2.compute.amazonaws.com:300/employees");
         return new ShowEmployeesPage();
     }
 
