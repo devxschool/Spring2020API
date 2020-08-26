@@ -17,7 +17,7 @@ Feature: Create Employee
       |employeeNumber|lastName|firstName|extension|email          |officeCode|reportsTo|jobTitle|
       |301           |John    |Doe    |300         |david@email.com|201       |101      |teacher |
     And usr submits the form
-    And Employee info is retreived with firstName "David" and lastName "Malan"
+    And Employee info is retreived with firstName "John" and lastName "Doe"
     Then The record should be present in the data base
 
 

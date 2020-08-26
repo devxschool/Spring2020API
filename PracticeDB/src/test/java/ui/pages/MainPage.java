@@ -26,7 +26,7 @@ public class MainPage {
     }
 
     public static MainPage goTo(){
-        Driver.getDriver().get("localhost:300");
+        Driver.getDriver().get("http://ec2-3-129-218-184.us-east-2.compute.amazonaws.com:300/");
         return new MainPage();
     }
 
