@@ -1,16 +1,10 @@
 package models;
 
 import db.DBUtils;
-import org.apache.commons.dbutils.BeanProcessor;
-
-import javax.print.DocFlavor;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
-
 //POJO, Beans
 //Lombok
 public class Employee extends BaseModel{
@@ -70,20 +64,33 @@ public class Employee extends BaseModel{
 //        return employees;
     }
 
+    public static List<Employee> getAllWithoutId() throws SQLException {
+        String query = "SELECT firstName, lastName... FROM employees";
+        ResultSet rs = DBUtils.query(query);
+        // toBeanList() converts a result set into a list of objects of a specified class by
+        // populating class variables with the data from Result set
+        return getProcessor().toBeanList(rs, Employee.class);
+    }
+
     // getBy("employeeId", 101)
     // getBy("firstName", "James")
     // Emloyee.getBy("firstName", "Joan")
-    public static Employee getBy(String field, Object value) throws SQLException {
-        // Select * FROM employees WHERE employeeId = 101;
-        // firstName = "Joan"
+    public static Employee getBy(String field, Object value) {
         String query = "SELECT * FROM employees WHERE " + field + " = ?";// add our value from field param into our query
-        // (SELECT * FROM employees WHERE firstName = ?)
-        ResultSet rs = DBUtils.query(query, value); // (SELECT * FROM employees WHERE firstName = 'Joan')
-        if(rs.next()) return new Employee(rs);
+        try(ResultSet rs = DBUtils.query(query, value)){ // (SELECT * FROM employees WHERE firstName = 'Joan')){
+            // Select * FROM employees WHERE employeeId = 101;
+            // firstName = "Joan"
+            // (SELECT * FROM employees WHERE firstName = ?)
+            if(rs.next()) return new Employee(rs);
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
         return null;
     }
 
-    public static Employee getBy(List<String> fieldsToUseInWhere, Object... values) throws SQLException {
+   // {"firstName", "lastName"}
+   // SELECT * FROM employees WHERE firstName = ? AND lastName = ?;
+    public static Employee getBy(List<String> fieldsToUseInWhere, Object... values) {
         if(fieldsToUseInWhere.size() != values.length) throw new IllegalArgumentException("Number of arguments don't match");
         String query = "SELECT * FROM employees WHERE ";
 
@@ -94,9 +101,13 @@ public class Employee extends BaseModel{
                 query += "AND " + fieldsToUseInWhere.get(i) + " = ? \n";
             }
         }
-        ResultSet rs = DBUtils.query(query, values);// Get result from query build into result set
-        if(!rs.next()) return null;// if Result Set is empty return null
-        return getProcessor().toBean(rs, Employee.class);// else Map a row from result set into new object of employee
+        try(ResultSet rs = DBUtils.query(query, values)){// Get result from query build into result set)
+            if(!rs.next()) return null;// if Result Set is empty return null
+            return getProcessor().toBean(rs, Employee.class);// else Map a row from result set into new object of employee
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+       return null;
     }
 
     public int getEmployeeNumber() {

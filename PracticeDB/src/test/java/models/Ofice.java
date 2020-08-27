@@ -13,7 +13,6 @@ public class Ofice {
     private String postalCode;
     private String territory;
 
-    public Ofice(){}
 
     public Ofice(int officeCode, String city, String phone, String addressLine1, String addressLine2, String state, String country, String postalCode, String territory) {
         this.officeCode = officeCode;

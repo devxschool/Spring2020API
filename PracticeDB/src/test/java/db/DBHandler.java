@@ -38,11 +38,17 @@ public class DBHandler {
 
     /**
      * {
-     *     {employeeNumber:101; firstName:"Joane"; }
-     *     {employeeNumber:101; firstName:"Joane"; }
-     *     {employeeNumber:101; firstName:"Joane"; }
-     *     {employeeNumber:101; firstName:"Joane"; }
+     *     0{employeeNumber:101; firstName:"Joane"; }
+     *     1{employeeNumber:101; firstName:"Joane"; }
+     *     2{employeeNumber:101; firstName:"Joane"; }
+     *     3{employeeNumber:101; firstName:"Joane"; }
      * }
+     * {employeeNumber, firstName};
+     * 101 | Joane
+     * 101 | Joane
+     * 101 | Joane
+     * 101 | Joane
+     * 101 | Joane
      *
      *
      *
