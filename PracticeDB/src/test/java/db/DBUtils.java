@@ -11,7 +11,7 @@ import java.util.Map;
 public class DBUtils {
     private static Connection connection;
     private static Statement statement;
-    private static QueryRunner queryRunner;
+    private static QueryRunner queryRunner; // APACHE COMONS DB UTILS
 
     private DBUtils() { }
 
@@ -73,14 +73,27 @@ public class DBUtils {
     }
 
     /**
+     * Columns(id, name, age)
+     *
      * INSERT INTO employees
-     * VALUES(employeeNumber, firstName, lastName....);
+     * VALUES(?,?,?); -> (007, 'James Bond', 20)
+     *
+     * Employee{empNumber:007, fullName:James Bond, age:20}
+     *
+     * ["empNumber" "fullName", "age"];
+     *
      */
 
     public static void close() {
         try {
-            if (statement != null) statement.close();
-            if (connection != null) connection.close();
+            if (statement != null){
+                statement.close();
+                statement = null;
+            }
+            if (connection != null){
+                connection.close();
+                connection = null;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
