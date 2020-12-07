@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="FoodDelivery" />
         <module name="Practice" />
+        <module name="PracticeDB" />
       </profile>
     </annotationProcessing>
   </component>
